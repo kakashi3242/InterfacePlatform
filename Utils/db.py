@@ -70,3 +70,34 @@ class Database:
         db.close()
 
         return lastId
+
+    def union_insert(self, firstSql, secondSql):
+        """
+        连表插入-->第一个表的Id与第二张表关联
+        :param firstSql: 
+        :param secondSql: 其中关联表的Id用`{0}`替代
+        :return: 
+        """
+        db = self.db
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        try:
+            # 执行第一张主表的插入
+            cursor.execute(firstSql)
+            # 获取当前插入数据的Id
+            currentId = cursor.lastrowid
+            # 第二张表插入的sql
+            secondSql = secondSql.format(currentId)
+            # 将第一张表的Id放进第一张表中作为参数传递
+            cursor.execute(secondSql)
+            db.commit()
+
+            a = True
+
+        except Exception as e:
+
+            db.rollback()
+
+            a = e
+        db.close()
+
+        return a

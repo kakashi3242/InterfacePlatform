@@ -69,12 +69,15 @@ def get_interface_info():
 
 @app.route('/api/mysql/insert')
 def mysql_insert():
-    insertSql = "INSERT INTO `interface_info` (`InterfaceUrl`, `Method`, `Comment`) VALUES ('/api/memberShip/GetEmployeeList','post','获取员工');"
+    firstSql = "INSERT INTO `interface_info` (`InterfaceUrl`, `Method`, `Comment`) VALUES ('/api/memberShip/GetEmployeeList','post','获取员工');"
+    z = {"DepartmentId": 884, "Page": {"PageIndex": 1, "PageSize": 10}, "Key": "", "State": 1}
+    secondSql = "INSERT INTO `interface_param` (`InterfaceId`, `Environment`, `Param`,`CaseName`,`ExceptExpression`) VALUES ('{0}','beta','{1}','获取员工','111');".format(
+        '{0}', z)
     db = Database()
 
-    lastId = db.test_insert(insertSql)
+    state = db.union_insert(firstSql, secondSql)
 
-    return jsonify({'result': str(lastId)})
+    return jsonify({'result': str(state)})
 
 
 @app.errorhandler(404)

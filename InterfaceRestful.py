@@ -8,21 +8,6 @@ from Utils.InterfaceTest import InterfaceTest
 app = Flask(__name__)
 CORS(app, supports_credentials = True)
 
-tasks = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web',
-        'done': False
-    }
-]
-
 auth = HTTPBasicAuth()
 
 
@@ -41,12 +26,6 @@ def unauthorized():
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
-
-
-@app.route('/api/tasks', methods = ['GET'])
-@auth.login_required
-def get_tasks():
-    return jsonify({'tasks': tasks})
 
 
 @app.route('/api/interface/add', methods = ['POST'])
@@ -88,10 +67,20 @@ def get_interface_info():
     return jsonify({'finalResult': respResult, 'detailResult': result})
 
 
+@app.route('/api/mysql/insert')
+def mysql_insert():
+    insertSql = "INSERT INTO `interface_info` (`InterfaceUrl`, `Method`, `Comment`) VALUES ('/api/memberShip/GetEmployeeList','post','获取员工');"
+    db = Database()
+
+    lastId = db.test_insert(insertSql)
+
+    return jsonify({'result': str(lastId)})
+
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found.'}), 404)
 
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port = 8080)
+    app.run(host = '0.0.0.0', port = 8000, debug = True)

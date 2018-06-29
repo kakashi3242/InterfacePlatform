@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <style>
+        body {
+            background: #eee
+        }
+
+        .LoginUrl {
+            width: 40%;
+            height: 30px;
+            float: left;
+            display: block;
+            border: none;
+            margin-top: 170px;
+        }
+
+        .LoginData {
+            width: 40%;
+            height: 200px;
+            display: block;
+            border: none;
+        }
+
+        .postBtn {
+            margin-left: 43%;
+            background: #0e88eb;
+            border: none;
+            width: 100px;
+            height: 30px;
+            color: white;
+            /*margin-top: -135px;*/
+        }
+
+    </style>
+</head>
+<body>
+<br>
+<div>
+    <label for="url">ServerUrl</label><input id="url" type="text">
+</div>
+<div>
+    <label for="env">Environment</label><input id="env" type="text">
+</div>
+<div>
+    <label for="method">Method</label><input id="method" type="text">
+</div>
+<div>
+    <label for="param">Parameters</label><input id="param" type="text">
+</div>
+<div>
+    <label for="comment">Comment</label><input id="comment" type="text">
+</div>
+
+<button onclick="submit()" class="postBtn">提交</button>
+</body>
+
+<script>
+    function submit() {
+        fetch('http://192.168.20.165:8080/api/interface/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                url: document.querySelector("#url").value,
+                env: document.querySelector("#env").value,
+                method: document.querySelector("#method").value,
+                param: document.querySelector("#param").value,
+                comment: document.querySelector("#comment").value
+            }),
+        })
+            .then(function (response) {
+                if (response.ok)
+                    return response.json();
+                else
+                    return Promise.reject({state: response.status, msg: response.statusText});
+            })
+            .then(data => {
+            console.log(data);
+    }).
+        catch(err => {
+            console.log(err);
+    })
+    }
+
+</script>
+
+</html>

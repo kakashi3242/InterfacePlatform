@@ -46,7 +46,7 @@ packaging==16.8
 parsel==1.1.0
 Pillow==5.0.0
 pipreqs==0.4.9
-py==1.4.33
+py==1.10.0
 pyasn1==0.2.3
 pyasn1-modules==0.0.8
 pycparser==2.17
